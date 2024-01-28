@@ -10,7 +10,6 @@ var playerClass:PackedScene = preload("res://Node/Player.tscn")
 func addPlayer(id:int):
 	var player:Player = playerClass.instantiate()
 	player.id = id;
-	print(str(id) + " " + str(player.id))
 	player.position = arena.getValidPlayerPos()
 	players.add_child(player,true)
 
