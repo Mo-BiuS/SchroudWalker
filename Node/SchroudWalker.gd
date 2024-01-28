@@ -11,6 +11,7 @@ func addPlayer(id:int):
 	var player:Player = playerClass.instantiate()
 	player.id = id;
 	player.position = arena.getValidPlayerPos()
+	player.rotation_degrees = rad_to_deg(atan2(arena.spawnCenter.position.y-player.position.y, arena.spawnCenter.position.x-player.position.x))
 	players.add_child(player,true)
 
 func removePlayer(id:int):

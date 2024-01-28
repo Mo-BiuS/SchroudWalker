@@ -2,6 +2,7 @@ class_name Player extends CharacterBody2D
 
 @onready var turret:Sprite2D = $TurretSprite
 @onready var tankAnim:AnimatedSprite2D = $TankSprite
+@onready var camera:Camera2D = $Camera2D
 @export var id:int;
 
 const ROTATE_SPEED = 0.02
@@ -14,6 +15,9 @@ var right:bool
 var left:bool;
 
 var mousePos:Vector2
+
+func _ready():
+	camera.enabled = multiplayer.get_unique_id() == id
 
 func _input(event):
 	if(multiplayer.get_unique_id() == id):
