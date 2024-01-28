@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dql25eigl5sue"]
+
+[ext_resource type="Script" path="res://Node/Root.gd" id="1_pk6a7"]
+[ext_resource type="PackedScene" uid="uid://cqb4akkam4k0q" path="res://Node/Menu/ConnectMenu.tscn" id="2_nxawv"]
+[ext_resource type="PackedScene" uid="uid://bw56q7qye2t7k" path="res://Node/SchroudWalker.tscn" id="3_b36tr"]
+
+[node name="Root" type="Node"]
+script = ExtResource("1_pk6a7")
+
+[node name="ConnectMenu" parent="." instance=ExtResource("2_nxawv")]
+
+[node name="SchroudWalker" parent="." instance=ExtResource("3_b36tr")]
+visible = false
+
+[connection signal="createClient" from="ConnectMenu" to="." method="_on_connect_menu_create_client"]
+[connection signal="createServer" from="ConnectMenu" to="." method="_on_connect_menu_create_server"]

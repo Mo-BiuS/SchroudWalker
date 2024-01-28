@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://wjehx1mv6fqo"]
+
+[ext_resource type="Script" path="res://Node/Menu/MenuServer.gd" id="1_8xxmk"]
+
+[node name="MenuServer" type="CanvasLayer"]
+script = ExtResource("1_8xxmk")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -47.0
+offset_right = 176.0
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="UpnpButton" type="Button" parent="PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Start UPNP"
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/UpnpButton" to="." method="_on_upnp_button_pressed"]
