@@ -2,17 +2,18 @@ class_name Player extends CharacterBody2D
 
 @onready var turret:Sprite2D = $TurretSprite
 @onready var tankAnim:AnimatedSprite2D = $TankSprite
-@onready var camera:Camera2D = $Camera2D
+@onready var camera:Camera2D = $TurretSprite/Camera2D
 @onready var munSpawn:Marker2D = $TurretSprite/MunSpawnPoint
+@onready var lifeBar:ProgressBar = $PanelContainer/MarginContainer/LifeBar
 @export var id:int;
 
 signal fire(pos:Vector2, angle:float)
 
-const ROTATE_SPEED = PI/3
-const TURRET_SPEED = PI/3
-const SPEED = 8000
+const ROTATE_SPEED = PI/4
+const TURRET_SPEED = PI/4
+const SPEED = 6000
 
-const RELOAD_TIME = 0.5
+const RELOAD_TIME = 2
 var reload = 0
 
 var forward:bool
@@ -22,9 +23,14 @@ var left:bool
 var firing:bool
 
 var mousePos:Vector2
+var hp = 6
 
 func _ready():
 	camera.enabled = multiplayer.get_unique_id() == id
+
+func getDamage(v:int):
+	hp-=v
+	lifeBar.value = hp
 
 func _input(event):
 	if(multiplayer.get_unique_id() == id):
@@ -96,7 +102,7 @@ func _process(delta):
 		var angleObjective = (atan2((mousePos.y),(mousePos.x)))-PI/2;
 		var playerAngle = deg_to_rad(turret.rotation_degrees)
 		var diff = angle_difference(playerAngle,angleObjective)
-		if(abs(diff) > 0.1):
+		if(abs(diff) > 0.025):
 			playerAngle+=sign(diff)*TURRET_SPEED*delta
 		turret.rotation_degrees = rad_to_deg(playerAngle)
 		

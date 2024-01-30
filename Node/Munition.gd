@@ -1,10 +1,15 @@
-class_name Munition extends CharacterBody2D
+class_name Munition extends Sprite2D
 
 const SPEED = 600
+const DMG = 2
 
 func _physics_process(delta):
 	if(multiplayer.get_unique_id() == 1):
-		velocity = Vector2(-sin(rotation),cos(rotation))*SPEED*delta
-		var collided = move_and_collide(velocity)
-		if collided != null:
-			queue_free()
+		position += Vector2(-sin(rotation),cos(rotation))*SPEED*delta
+		
+
+
+func _on_area_2d_body_entered(body):
+	if(body is Player):
+		body.getDamage(DMG)
+	queue_free()
