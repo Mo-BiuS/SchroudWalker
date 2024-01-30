@@ -62,13 +62,11 @@ script = ExtResource("1_gpsg4")
 shape = SubResource("CircleShape2D_byjcm")
 
 [node name="TankSprite" type="AnimatedSprite2D" parent="."]
-rotation = -1.5708
 sprite_frames = SubResource("SpriteFrames_mpmti")
 animation = &"Moving"
 speed_scale = 3.0
 
 [node name="TurretSprite" type="Sprite2D" parent="."]
-rotation = -1.5708
 texture = ExtResource("2_8xbpx")
 region_enabled = true
 region_rect = Rect2(0, 32, 32, 32)
