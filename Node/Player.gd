@@ -3,16 +3,23 @@ class_name Player extends CharacterBody2D
 @onready var turret:Sprite2D = $TurretSprite
 @onready var tankAnim:AnimatedSprite2D = $TankSprite
 @onready var camera:Camera2D = $Camera2D
+@onready var munSpawn:Marker2D = $TurretSprite/MunSpawnPoint
 @export var id:int;
 
-const ROTATE_SPEED = 0.02
+signal fire(pos:Vector2, angle:float)
+
+const ROTATE_SPEED = PI/3
 const TURRET_SPEED = PI/3
-const SPEED = 100
+const SPEED = 8000
+
+const RELOAD_TIME = 0.5
+var reload = 0
 
 var forward:bool
 var backward:bool
 var right:bool
-var left:bool;
+var left:bool
+var firing:bool
 
 var mousePos:Vector2
 
@@ -51,14 +58,22 @@ func _input(event):
 			left = event.is_action_pressed("turnLeft")
 			change = true
 		
-		if(id != 1 && change):rpc_id(1,"syncMvm",forward,backward,right,left)
+		if(firing): 
+			firing = !event.is_action_released("fire")
+			change = true
+		else : 
+			firing = event.is_action_pressed("fire")
+			change = true
+		
+		if(id != 1 && change):rpc_id(1,"syncMvm",forward,backward,right,left,firing)
 
 @rpc("call_remote","any_peer")
-func syncMvm(d0,d1,d2,d3):
+func syncMvm(d0,d1,d2,d3,d4):
 	self.forward = d0
 	self.backward = d1
 	self.right = d2
 	self.left = d3
+	self.firing = d4
 
 @rpc("call_remote","any_peer")
 func syncMousePos(mp):
@@ -69,10 +84,10 @@ func _process(delta):
 		mousePos = get_local_mouse_position()
 		if(id != 1):rpc_id(1,"syncMousePos",mousePos)
 	if(multiplayer.get_unique_id() == 1):
-		if(right):rotate(ROTATE_SPEED)
-		if(left):rotate(-ROTATE_SPEED)
-		if(forward):velocity = Vector2(-sin(rotation)*SPEED,cos(rotation)*SPEED)
-		elif(backward):velocity = Vector2(sin(rotation)*SPEED,-cos(rotation)*SPEED)
+		if(right):rotate(ROTATE_SPEED*delta)
+		if(left):rotate(-ROTATE_SPEED*delta)
+		if(forward):velocity = Vector2(-sin(rotation),cos(rotation))*SPEED*delta
+		elif(backward):velocity = Vector2(sin(rotation),-cos(rotation))*SPEED*delta
 		else:velocity = Vector2.ZERO
 		
 		if(right or left or forward or backward):tankAnim.play()
@@ -84,5 +99,10 @@ func _process(delta):
 		if(abs(diff) > 0.1):
 			playerAngle+=sign(diff)*TURRET_SPEED*delta
 		turret.rotation_degrees = rad_to_deg(playerAngle)
+		
+		if(reload >= 0):reload-=delta;
+		elif(firing):
+			reload = RELOAD_TIME
+			fire.emit(munSpawn.global_position, turret.rotation+self.rotation)
 		
 		move_and_slide()

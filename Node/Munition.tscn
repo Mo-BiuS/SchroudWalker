@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cabo0778fyulo"]
+
+[ext_resource type="Script" path="res://Node/Munition.gd" id="1_45pmw"]
+[ext_resource type="Texture2D" uid="uid://m235jbe12fsl" path="res://Ressources/TankAssets.png" id="1_qo0sr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jylw1"]
+radius = 2.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hasul"]
+properties/0/path = NodePath(".:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Munition" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("1_45pmw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jylw1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_qo0sr")
+region_enabled = true
+region_rect = Rect2(32, 32, 32, 32)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_hasul")
